@@ -1,0 +1,79 @@
+name: Checks
+
+on: push
+
+# Action docs:
+# https://github.com/actions/checkout#readme
+# https://github.com/actions-rs/toolchain#readme
+# https://github.com/Swatinem/rust-cache#readme
+# https://github.com/actions-rs/cargo#readme
+
+jobs:
+
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          # Use nightly for unstable features in rustfmt.toml
+          toolchain: nightly
+          profile: minimal
+          components: rustfmt
+          default: true
+      -
+        name: cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: clippy
+          default: true
+      -
+        uses: Swatinem/rust-cache@v1
+        with:
+          sharedKey: clippy
+          key: ${{ github.ref }}
+      -
+        name: cargo clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-targets -- --deny warnings
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rust-docs
+          default: true
+      -
+        uses: Swatinem/rust-cache@v1
+        with:
+          sharedKey: clippy
+          key: ${{ github.ref }}
+      -
+        name: cargo clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --no-deps --document-private-items
