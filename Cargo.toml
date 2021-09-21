@@ -1,0 +1,11 @@
+[package]
+name = "env-var-helpers"
+version = "0.1.0"
+authors = ["Pi Delport <pjdelport@gmail.com>"]
+edition = "2018"
+description = "Environment variable access helpers"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+thiserror = "1.0"
