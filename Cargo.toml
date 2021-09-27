@@ -7,5 +7,11 @@ description = "Environment variable access helpers"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["doc-include-str"]
+
+# Use "#[doc = include_str!()]" for lib doc (requires Rust 1.54)
+doc-include-str = []
+
 [dependencies]
 thiserror = "1.0"
